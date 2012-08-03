@@ -8,11 +8,12 @@ module GlyphBackup
     def backup!
       # Load YAML config file
       load_config!
-      # Load steps
-      define_steps!
       
       prepare!
+      
       begin
+        # Load steps
+        define_steps!
         # Run steps !
         @steps.each(&:run)
       ensure
@@ -29,7 +30,7 @@ module GlyphBackup
     def define_steps!
       # Build each steps if they're meant to be executed
       @steps = [:database, :app, :archive, :upload].map do |step|
-        Step.build(type: step, config: @config, dir: @tmp_dir, env: @options[:env]) if @options[:execute][step]
+        Step.build(type: step, config: @config, dir: @tmp_dir, env: @options[:env]) if @options[step]
       end
     end
     
@@ -42,6 +43,9 @@ module GlyphBackup
     def clean!
       # Delete tmp folder
       FileUtils.rm_r @tmp_dir
+      # Delete archive if created
+      archive_path = "#{ @tmp_dir }.tar.gz"
+      FileUtils.rm archive_path if File.exists?(archive_path)
     end
   end
 end

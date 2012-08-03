@@ -1,7 +1,7 @@
 module GlyphBackup
   module Backup
     class DatabaseStep < Step
-      role :database
+      role :db
       
       def initialize *args
         super *args
@@ -11,12 +11,15 @@ module GlyphBackup
       end
       
       def load_credentials!
-        @credentials = (YAML.load File.read config['credentials'])[@env]
+        @credentials = (YAML.load File.read params['credentials'])[@env]
       end
       
       def run
-        DatabaseRecipes.const_get(config['type'].capitalize).execute(@credentials, @dump_path)
+        log "Dumping database to #{ @dump_path }"
+        DatabaseRecipes.const_get(params['type'].capitalize).execute(@credentials, @dump_path)
       end
     end
   end
 end
+
+require 'glyph-backup/backup/database_recipes'

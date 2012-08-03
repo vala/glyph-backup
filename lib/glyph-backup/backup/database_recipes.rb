@@ -5,4 +5,4 @@ module GlyphBackup
   end
 end
 
-require 'glpyh-backup/backup/database_recipes/mysql'
+require 'glyph-backup/backup/database_recipes/mysql'
