@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require 'glyph-backup/cli'
+GlyphBackup::CLI.execute
