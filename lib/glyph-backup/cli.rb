@@ -58,7 +58,7 @@ module GlyphBackup
         warn self.class.instance_variable_get('@parser')
         exit
       # Missing config path
-      elsif @options[:config_path]
+      elsif !@options[:config_path]
         warn "Config file path not given, please specify one with the corresponding option"
         puts "------------------------------------------------------------------------------"
         warn self.class.instance_variable_get('@parser')
