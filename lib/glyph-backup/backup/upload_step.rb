@@ -29,13 +29,32 @@ module GlyphBackup
             ftp.chdir(dir)
           end
           
-          log "Uploading file : #{ File.join(@working_dir, "#{ filename }.tar.gz") }"
-          ftp.putbinaryfile("#{ @working_dir }.tar.gz")
+          filepath = "#{ @working_dir }.tar.gz"
+          size, progress = File.size(filepath), 0
+          
+          
+          ftp.putbinaryfile(filepath, File.basename(filepath), 1024) do |data|
+            progress += data.size
+            print "Uploading archive --- Progress : #{ ((progress.to_f / size) * 100).to_i }% (#{ humanize(progress) } / #{ humanize(size) })        \r"
+          end
+          print "Archive upload complete !"
         end
       end
       
       def mkdir_p ftp, dir
         ftp.mkdir(dir) unless ftp.list.length > 0 && ftp.nlst.include?(dir)
+      end
+      
+      def humanize val
+        if val > 1024**3
+          "#{ ((val.to_f / 1024**3) * 1000).round.to_f / 1000 }Go"
+        elsif val.to_f > 1024**2
+          "#{ ((val.to_f / 1024**2) * 1000).round.to_f / 1000 }Mo"
+        elsif val > 1024
+          "#{ ((val.to_f / 1024) * 1000).round.to_f / 1000 }Ko"
+        else
+          "#{ val }o"
+        end
       end
     end
   end

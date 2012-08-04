@@ -9,9 +9,9 @@ module GlyphBackup
       end
       
       def run
-        @folders.each do |folder|
+        @folders.each do |path|
           # Store src and dest paths
-          src, dest = File.join(pwd, folder), File.join(@working_dir, folder)
+          src, dest = File.join(pwd, path), File.join(@working_dir, path.gsub(/\//, '-_-'))
           log "Moving file : #{ src } - to : #{ dest }"
           # Copy file
           File.directory?(src) ? FileUtils.cp_r(src, dest) : FileUtils.cp(src, dest)
